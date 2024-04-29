@@ -1,0 +1,28 @@
+sort1 uses: Bubble Sort
+
+How do you know?:
+
+reversed50000.txt -> 5.869s
+sorted50000.txt -> 1.486s
+
+Sort1 was much slower on the reversed file but faster on the sorted file, which is typical for an unoptimized bubble sort. Its performance depends on input order, confirming it is bubble sort.
+
+---
+sort2 uses: Merge Sort
+
+How do you know?:
+
+reversed50000.txt -> 1.434s
+sorted50000.txt -> 1.185s
+
+Sort2 was fast on both reversed and sorted inputs. This matches merge sort’s O(n log n) behavior, which efficiently handles large lists regardless of input order.
+
+---
+sort3 uses: Selection Sort
+
+How do you know?:
+
+reversed50000.txt -> 3.363s
+sorted50000.txt -> 4.048s
+
+Sort3 was the slowest or among the slowest on both types of inputs. Selection sort always scans every element, so this matches its O(n^2) behavior.
