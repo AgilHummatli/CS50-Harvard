@@ -1,0 +1,119 @@
+/* General body styles */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #1a1a2e;
+    padding: 1rem 2rem;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #e94560 !important;
+}
+
+.nav-link {
+    color: #fff !important;
+    margin-left: 1rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #e94560 !important;
+}
+
+/* Hero section */
+.hero {
+    background-color: #1a1a2e;
+    color: #fff;
+    padding: 100px 20px;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    color: #aaa;
+    margin-top: 10px;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #e94560;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 25px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #c73652;
+}
+
+/* Info cards */
+.info-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Page header */
+.page-header {
+    background-color: #1a1a2e;
+    color: #fff;
+    padding: 50px 20px;
+}
+
+/* Timeline list */
+.timeline {
+    list-style: none;
+    padding: 0;
+}
+
+.timeline li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 1rem;
+}
+
+/* Progress bars */
+.progress {
+    height: 20px;
+    border-radius: 10px;
+}
+
+.progress-bar {
+    background-color: #e94560;
+    border-radius: 10px;
+    width: 0%;
+}
+
+/* Certificate list */
+.cert-list .list-group-item {
+    border-left: 4px solid #e94560;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+/* Footer */
+footer {
+    background-color: #1a1a2e;
+    color: #aaa;
+    margin-top: 50px;
+}
