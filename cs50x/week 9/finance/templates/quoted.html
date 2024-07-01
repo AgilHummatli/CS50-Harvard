@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quoted
+{% endblock %}
+
+{% block main %}
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <h2 class="mb-4">Stock Quote</h2>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Company</th>
+                        <td>{{ quote.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Symbol</th>
+                        <td>{{ quote.symbol }}</td>
+                    </tr>
+                    <tr>
+                        <th>Price</th>
+                        <td>{{ quote.price | usd }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <a class="btn btn-primary" href="/buy">Buy Shares</a>
+            <a class="btn btn-secondary" href="/quote">Look Up Another</a>
+        </div>
+    </div>
+{% endblock %}
