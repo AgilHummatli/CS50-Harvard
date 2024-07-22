@@ -1,0 +1,302 @@
+{% extends "layout.html" %}
+{% block title %}— Dashboard{% endblock %}
+
+{% block head %}
+    <style>
+        .dash-greeting {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+        }
+
+        .dash-greeting span {
+            color: var(--acc);
+        }
+
+        .dash-sub {
+            font-size: 13px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 28px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px 20px;
+        }
+
+        .stat-num {
+            font-size: 30px;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--acc);
+            letter-spacing: -1px;
+        }
+
+        .stat-lbl {
+            font-size: 10px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .focus-block {
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .focus-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--pl), transparent);
+            opacity: .4;
+        }
+
+        .focus-eyebrow {
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--pl);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--pl);
+            box-shadow: 0 0 10px var(--pl);
+            animation: blink 2s infinite;
+        }
+
+        .focus-task {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -.4px;
+            line-height: 1.35;
+            margin-bottom: 20px;
+        }
+
+        .focus-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .focus-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .flow-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .flow-time {
+            font-size: 32px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 300;
+            color: var(--acc);
+            letter-spacing: -1px;
+            min-width: 80px;
+        }
+
+        .flow-controls {
+            display: flex;
+            gap: 4px;
+            flex-direction: column;
+        }
+
+        .flow-label {
+            font-size: 10px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 1.5px;
+        }
+
+        .btn-flow {
+            background: rgba(124, 58, 237, .1);
+            border: 1px solid var(--pdim);
+            color: var(--acc);
+            padding: 5px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            transition: all .15s;
+            font-weight: 600;
+        }
+
+        .btn-flow:hover {
+            background: rgba(124, 58, 237, .2);
+        }
+
+        .btn-flow.running {
+            color: var(--yellow);
+            border-color: rgba(251, 191, 36, .3);
+            background: rgba(251, 191, 36, .05);
+        }
+
+        .queue-label {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text3);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .queue-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: var(--text3);
+        }
+
+        .empty-focus {
+            color: var(--text3);
+            font-size: 14px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="dash-greeting">Good <span>{{ greeting }}</span>, {{ username }}.</div>
+    <div class="dash-sub">
+        {% if tasks %}
+            // {{ tasks|length }} task{{ 's' if tasks|length != 1 else '' }} locked · flow state available
+        {% else %}
+            // no tasks yet — add one to begin
+        {% endif %}
+    </div>
+
+<!-- Stats -->
+    <div class="stats-row">
+        <div class="stat">
+            <div class="stat-num">{{ done_today }}</div>
+            <div class="stat-lbl">Done today</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num">{{ tasks|length }}</div>
+            <div class="stat-lbl">Remaining</div>
+        </div>
+        <div class="stat">
+            <div class="stat-num" id="flowStat">0m</div>
+            <div class="stat-lbl">Flow time</div>
+        </div>
+    </div>
+
+<!-- Focus block -->
+    <div class="focus-block">
+        <div class="focus-eyebrow">
+            <div class="pulse-dot"></div>NOW FOCUS
+        </div>
+
+        {% if tasks %}
+            <div class="focus-task" id="focusText">{{ tasks[0].text }}</div>
+            <div class="focus-row">
+                <div class="focus-btns">
+                    <form method="POST" action="/tasks/complete/{{ tasks[0].id }}" style="display:inline;">
+                        <button class="btn-primary" type="submit">✓ Done</button>
+                    </form>
+                    <a class="btn-ghost" href="/focus">Enter focus mode →</a>
+                </div>
+                <div class="flow-box">
+                    <div class="flow-time" id="flowTime">00:00</div>
+                    <div class="flow-controls">
+                        <div class="flow-label" id="flowLabel">PAUSED</div>
+                        <button class="btn-flow" id="flowBtn" onclick="toggleFlow()">▶ START FLOW</button>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-focus">No tasks yet. <a href="/tasks" style="color:var(--acc);">Add one →</a></div>
+        {% endif %}
+    </div>
+
+<!-- Queue preview -->
+    {% if tasks|length > 1 %}
+        <div class="queue-label">Up next</div>
+        {% for task in tasks[1:3] %}
+            <div class="queue-item">
+                <div class="pbar p-{{ task.priority }}"></div>
+                {{ task.text }}
+                <span class="ptag ptag-{{ task.priority }}" style="margin-left:auto;">{{ task.priority }}</span>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let flowOn = false,
+            flowSec = 0,
+            flowInterval = null;
+
+        function toggleFlow() {
+            flowOn = !flowOn;
+            const btn = document.getElementById('flowBtn');
+            const lbl = document.getElementById('flowLabel');
+            if (flowOn) {
+                btn.textContent = '⏸ PAUSE';
+                btn.classList.add('running');
+                lbl.textContent = 'FLOWING';
+                lbl.style.color = 'var(--pl)';
+                flowInterval = setInterval(() => {
+                    flowSec++;
+                    updateTimer();
+                }, 1000);
+            } else {
+                btn.textContent = '▶ START FLOW';
+                btn.classList.remove('running');
+                lbl.textContent = 'PAUSED';
+                lbl.style.color = '';
+                clearInterval(flowInterval);
+            }
+        }
+
+        function updateTimer() {
+            const m = String(Math.floor(flowSec / 60)).padStart(2, '0');
+            const s = String(flowSec % 60).padStart(2, '0');
+            document.getElementById('flowTime').textContent = m + ':' + s;
+            document.getElementById('flowStat').textContent = Math.floor(flowSec / 60) + 'm';
+        }
+    </script>
+{% endblock %}
