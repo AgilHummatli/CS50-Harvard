@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+{% block title %}— History{% endblock %}
+
+{% block head %}
+    <style>
+        .history-day {
+            margin-bottom: 24px;
+        }
+
+        .history-date {
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text3);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-date::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 16px;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            margin-bottom: 6px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--text2);
+            transition: all .15s;
+        }
+
+        .history-item:hover {
+            border-color: var(--border2);
+            color: var(--text);
+        }
+
+        .done-check {
+            width: 18px;
+            height: 18px;
+            background: rgba(124, 58, 237, .15);
+            border: 1px solid var(--pdim);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--pl);
+            flex-shrink: 0;
+        }
+
+        .history-time {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text3);
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .empty-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="page-title" style="margin-bottom:24px;">Completion History</div>
+
+    {% if grouped %}
+        {% for date, items in grouped.items() %}
+            <div class="history-day">
+                <div class="history-date">{{ date }} · {{ items|length }} completed</div>
+                {% for item in items %}
+                    <div class="history-item">
+                        <div class="done-check">✓</div>
+                        {{ item.task_text }}
+                        <span class="history-time">{{ item.time }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty">
+            <div class="empty-icon">📋</div>
+            No completed tasks yet.<br>Complete a task to see it here.
+        </div>
+    {% endif %}
+{% endblock %}

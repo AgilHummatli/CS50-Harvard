@@ -1,0 +1,179 @@
+{% extends "layout.html" %}
+{% block title %}— Brain Dump{% endblock %}
+
+{% block head %}
+    <style>
+        .dump-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .dump-meta {
+            font-size: 11px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .dump-editor {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: border-color .2s;
+        }
+
+        .dump-editor:focus-within {
+            border-color: var(--pdim);
+        }
+
+        .dump-textarea {
+            width: 100%;
+            min-height: 200px;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            line-height: 1.9;
+        }
+
+        .dump-textarea::placeholder {
+            color: var(--text3);
+        }
+
+        .dump-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            margin-top: 12px;
+        }
+
+        .dump-count-label {
+            font-size: 11px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .snaps-label {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text3);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .snap-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 16px;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all .15s;
+        }
+
+        .snap-item:hover {
+            border-color: var(--border2);
+        }
+
+        .snap-time {
+            font-size: 10px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+            margin-top: 2px;
+        }
+
+        .snap-text {
+            flex: 1;
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.6;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .snap-del {
+            background: none;
+            border: none;
+            color: transparent;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all .15s;
+            flex-shrink: 0;
+        }
+
+        .snap-item:hover .snap-del {
+            color: var(--text3);
+        }
+
+        .snap-del:hover {
+            color: var(--red) !important;
+            background: rgba(248, 113, 113, .08);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 32px 20px;
+            color: var(--text3);
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="dump-top">
+        <div class="page-title">Brain Dump</div>
+        <div class="dump-meta" id="dumpMeta">0 words</div>
+    </div>
+
+    <form method="POST" action="/dump">
+        <div class="dump-editor">
+            <textarea class="dump-textarea" name="content" id="dumpArea" placeholder="dump everything here — thoughts, ideas, noise, anxiety, random stuff. no structure needed. just get it out of your head..." oninput="updateDump()"></textarea>
+            <div class="dump-footer">
+                <div class="dump-count-label" id="dumpCountLabel">start typing...</div>
+                <button class="btn-sm" type="submit">Save snapshot →</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="snaps-label">Saved snapshots</div>
+
+    {% if dumps %}
+        {% for dump in dumps %}
+            <div class="snap-item">
+                <div class="snap-time">{{ dump.created_at[:16] }}</div>
+                <div class="snap-text">{{ dump.content[:200] }}{% if dump.content|length > 200 %}…{% endif %}</div>
+                <form method="POST" action="/dump/delete/{{ dump.id }}" style="display:contents;">
+                    <button class="snap-del" type="submit" title="Delete">✕</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty">No snapshots yet. Write something and save it.</div>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function updateDump() {
+            const text = document.getElementById('dumpArea').value;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const lines = text.trim() ? text.trim().split('\n').filter(l => l.trim()).length : 0;
+            document.getElementById('dumpMeta').textContent = words + ' word' + (words !== 1 ? 's' : '');
+            document.getElementById('dumpCountLabel').textContent = words > 0 ? words + ' words captured' : 'start typing...';
+        }
+    </script>
+{% endblock %}

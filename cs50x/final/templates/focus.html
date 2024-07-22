@@ -1,0 +1,190 @@
+{% extends "layout.html" %}
+{% block title %}— Focus{% endblock %}
+
+{% block head %}
+    <style>
+        .focus-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 54px);
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: -36px;
+        }
+
+        .focus-eyebrow {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--pl);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--pl);
+            box-shadow: 0 0 10px var(--pl);
+            animation: blink 2s infinite;
+        }
+
+        .big-task {
+            font-size: clamp(20px, 4vw, 32px);
+            font-weight: 800;
+            letter-spacing: -.8px;
+            line-height: 1.3;
+            max-width: 620px;
+            margin: 0 auto 32px;
+        }
+
+        .big-timer {
+            font-size: clamp(52px, 10vw, 80px);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 200;
+            color: var(--acc);
+            letter-spacing: -3px;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .timer-label {
+            font-size: 11px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 2px;
+            margin-bottom: 36px;
+            transition: color .2s;
+        }
+
+        .focus-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-big {
+            background: var(--p);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 10px;
+            font-family: 'Syne', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .btn-big:hover {
+            background: var(--pl);
+            box-shadow: 0 0 28px rgba(124, 58, 237, .4);
+            transform: translateY(-1px);
+        }
+
+        .btn-big-ghost {
+            background: none;
+            color: var(--text2);
+            border: 1px solid var(--border2);
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-family: 'Syne', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .btn-big-ghost:hover {
+            border-color: var(--text3);
+            color: var(--text);
+        }
+
+        .no-tasks {
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+
+        .no-tasks a {
+            color: var(--acc);
+            text-decoration: none;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="focus-page">
+        <div class="focus-eyebrow">
+            <div class="pulse-dot"></div>FLOW MODE
+        </div>
+
+        {% if current_task %}
+            <div class="big-task" id="focusTaskText">{{ current_task.text }}</div>
+            <div class="big-timer" id="bigTimer">00:00</div>
+            <div class="timer-label" id="timerLabel">PAUSED · FLOW TIME TRACKED</div>
+
+            <div class="focus-actions">
+                <button class="btn-big" id="flowBtn" onclick="toggleFlow()">▶ Start Flow</button>
+
+                <form method="POST" action="/tasks/complete/{{ current_task.id }}" style="display:inline;">
+                    <button class="btn-big-ghost" type="submit">✓ Mark done</button>
+                </form>
+
+                {% if tasks|length > 1 %}
+                    <button class="btn-big-ghost" onclick="skipTask()">Skip task →</button>
+                {% endif %}
+            </div>
+
+        {% else %}
+            <div class="big-task" style="color:var(--text3);">All tasks complete.</div>
+            <div class="no-tasks">Nothing left to focus on. <a href="/tasks">Add more tasks →</a></div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let flowOn = false,
+            flowSec = 0,
+            flowInterval = null;
+
+        function toggleFlow() {
+            flowOn = !flowOn;
+            const btn = document.getElementById('flowBtn');
+            const lbl = document.getElementById('timerLabel');
+            if (flowOn) {
+                btn.textContent = '⏸ Pause Flow';
+                lbl.textContent = 'FLOWING · TIME TRACKED';
+                lbl.style.color = 'var(--pl)';
+                flowInterval = setInterval(() => {
+                    flowSec++;
+                    updateTimer();
+                }, 1000);
+            } else {
+                btn.textContent = '▶ Start Flow';
+                lbl.textContent = 'PAUSED · FLOW TIME TRACKED';
+                lbl.style.color = '';
+                clearInterval(flowInterval);
+            }
+        }
+
+        function updateTimer() {
+            const m = String(Math.floor(flowSec / 60)).padStart(2, '0');
+            const s = String(flowSec % 60).padStart(2, '0');
+            document.getElementById('bigTimer').textContent = m + ':' + s;
+        }
+
+    // Skip just reloads — in real app you'd track skip index in session
+        function skipTask() {
+            window.location.reload();
+        }
+    </script>
+{% endblock %}
