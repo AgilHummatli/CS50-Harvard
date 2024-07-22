@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ActuON {% block title %}{% endblock %}</title>
+        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+        <style>
+            :root {
+                --bg: #080710;
+                --bg2: #0d0b1a;
+                --bg3: #111024;
+                --surface: #16132a;
+                --surface2: #1e1a35;
+                --border: #271f45;
+                --border2: #342a5a;
+                --p: #7c3aed;
+                --pl: #9d5ff5;
+                --pdim: #3b1f7a;
+                --acc: #a78bfa;
+                --acc2: #c4b5fd;
+                --text: #ede8ff;
+                --text2: #9b90c2;
+                --text3: #4e4670;
+                --red: #f87171;
+                --yellow: #fbbf24;
+                --green: #4ade80;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: 'Syne', sans-serif;
+                min-height: 100vh;
+            }
+
+            body::after {
+                content: '';
+                position: fixed;
+                top: -300px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 900px;
+                height: 600px;
+                background: radial-gradient(ellipse, rgba(124, 58, 237, .07) 0%, transparent 65%);
+                pointer-events: none;
+                z-index: 0;
+            }
+
+            /* NAV */
+            nav {
+                height: 54px;
+                display: flex;
+                align-items: center;
+                padding: 0 28px;
+                border-bottom: 1px solid var(--border);
+                background: rgba(8, 7, 16, .88);
+                backdrop-filter: blur(24px);
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                gap: 6px;
+            }
+
+            .nav-logo {
+                font-size: 17px;
+                font-weight: 800;
+                letter-spacing: -.5px;
+                margin-right: 20px;
+                text-decoration: none;
+                color: var(--text);
+            }
+
+            .nav-logo span {
+                color: var(--pl);
+            }
+
+            .nav-link {
+                padding: 6px 14px;
+                border-radius: 7px;
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--text3);
+                text-decoration: none;
+                transition: all .15s;
+            }
+
+            .nav-link:hover {
+                color: var(--text2);
+                background: var(--surface);
+            }
+
+            .nav-link.active {
+                color: var(--acc);
+                background: rgba(124, 58, 237, .1);
+            }
+
+            .nav-right {
+                margin-left: auto;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .nav-user {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                padding: 5px 12px;
+                border: 1px solid var(--border);
+                border-radius: 20px;
+                font-size: 12px;
+                color: var(--text2);
+                font-family: 'JetBrains Mono', monospace;
+            }
+
+            .nav-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--pl);
+                box-shadow: 0 0 8px var(--pl);
+                animation: blink 2.5s infinite;
+            }
+
+            @keyframes blink {
+
+                0%,
+                100% {
+                    opacity: 1
+                }
+
+                50% {
+                    opacity: .3
+                }
+            }
+
+            .btn-logout {
+                padding: 5px 12px;
+                border: 1px solid var(--border);
+                border-radius: 7px;
+                background: none;
+                color: var(--text3);
+                font-size: 12px;
+                font-family: 'JetBrains Mono', monospace;
+                cursor: pointer;
+                transition: all .15s;
+                text-decoration: none;
+            }
+
+            .btn-logout:hover {
+                color: var(--red);
+                border-color: rgba(248, 113, 113, .3);
+            }
+
+            /* CONTENT */
+            .content {
+                max-width: 860px;
+                margin: 0 auto;
+                padding: 36px 48px;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* SHARED COMPONENTS */
+            .page-title {
+                font-size: 22px;
+                font-weight: 800;
+                letter-spacing: -.5px;
+            }
+
+            .mono {
+                font-family: 'JetBrains Mono', monospace;
+            }
+
+            .btn-primary {
+                background: var(--p);
+                color: white;
+                border: none;
+                padding: 10px 22px;
+                border-radius: 8px;
+                font-family: 'Syne', sans-serif;
+                font-size: 13px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all .2s;
+                display: inline-flex;
+                align-items: center;
+                gap: 7px;
+                text-decoration: none;
+            }
+
+            .btn-primary:hover {
+                background: var(--pl);
+                box-shadow: 0 0 20px rgba(124, 58, 237, .35);
+                transform: translateY(-1px);
+            }
+
+            .btn-primary:active {
+                transform: scale(.98);
+            }
+
+            .btn-sm {
+                background: rgba(124, 58, 237, .1);
+                border: 1px solid var(--pdim);
+                color: var(--acc);
+                padding: 7px 16px;
+                border-radius: 7px;
+                font-family: 'Syne', sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all .15s;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+            .btn-sm:hover {
+                background: rgba(124, 58, 237, .2);
+                box-shadow: 0 0 14px rgba(124, 58, 237, .2);
+            }
+
+            .btn-ghost {
+                background: none;
+                color: var(--text3);
+                border: 1px solid var(--border);
+                padding: 9px 16px;
+                border-radius: 8px;
+                font-family: 'Syne', sans-serif;
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all .15s;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+            .btn-ghost:hover {
+                color: var(--text2);
+                border-color: var(--border2);
+            }
+
+            .inp {
+                background: var(--bg3);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 10px 13px;
+                color: var(--text);
+                font-family: 'Syne', sans-serif;
+                font-size: 14px;
+                outline: none;
+                transition: all .2s;
+                width: 100%;
+            }
+
+            .inp:focus {
+                border-color: var(--p);
+                box-shadow: 0 0 0 2px rgba(124, 58, 237, .1);
+            }
+
+            .inp::placeholder {
+                color: var(--text3);
+            }
+
+            .sel {
+                background: var(--bg3);
+                border: 1px solid var(--border);
+                border-radius: 7px;
+                padding: 9px 10px;
+                color: var(--text2);
+                font-family: 'JetBrains Mono', monospace;
+                font-size: 11px;
+                outline: none;
+                cursor: pointer;
+            }
+
+            .error-msg {
+                background: rgba(248, 113, 113, .08);
+                border: 1px solid rgba(248, 113, 113, .2);
+                color: var(--red);
+                padding: 10px 14px;
+                border-radius: 8px;
+                font-size: 13px;
+                margin-bottom: 16px;
+            }
+
+            .ptag {
+                font-size: 10px;
+                font-family: 'JetBrains Mono', monospace;
+                padding: 2px 8px;
+                border-radius: 4px;
+                font-weight: 600;
+            }
+
+            .ptag-high {
+                background: rgba(248, 113, 113, .1);
+                color: #f87171;
+                border: 1px solid rgba(248, 113, 113, .2);
+            }
+
+            .ptag-med {
+                background: rgba(251, 191, 36, .1);
+                color: #fbbf24;
+                border: 1px solid rgba(251, 191, 36, .2);
+            }
+
+            .ptag-low {
+                background: rgba(74, 222, 128, .1);
+                color: #4ade80;
+                border: 1px solid rgba(74, 222, 128, .2);
+            }
+
+            .pbar {
+                width: 3px;
+                border-radius: 3px;
+                align-self: stretch;
+                flex-shrink: 0;
+            }
+
+            .p-high {
+                background: #f87171;
+                box-shadow: 0 0 8px rgba(248, 113, 113, .3);
+            }
+
+            .p-med {
+                background: #fbbf24;
+            }
+
+            .p-low {
+                background: #4ade80;
+            }
+
+            ::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: var(--border);
+                border-radius: 4px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: var(--pdim);
+            }
+
+            /* TOAST */
+            #toast-container {
+                position: fixed;
+                bottom: 28px;
+                right: 28px;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                pointer-events: none;
+            }
+
+            .toast {
+                padding: 12px 18px;
+                border-radius: 10px;
+                font-size: 13px;
+                font-weight: 600;
+                font-family: 'JetBrains Mono', monospace;
+                pointer-events: auto;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: toastIn .25s ease, toastOut .3s ease 2.7s forwards;
+                backdrop-filter: blur(12px);
+            }
+
+            .toast-success {
+                background: rgba(74, 222, 128, .12);
+                border: 1px solid rgba(74, 222, 128, .25);
+                color: #4ade80;
+            }
+
+            .toast-error {
+                background: rgba(248, 113, 113, .12);
+                border: 1px solid rgba(248, 113, 113, .25);
+                color: #f87171;
+            }
+
+            .toast-info {
+                background: rgba(167, 139, 250, .12);
+                border: 1px solid rgba(167, 139, 250, .25);
+                color: var(--acc);
+            }
+
+            @keyframes toastIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px)
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0)
+                }
+            }
+
+            @keyframes toastOut {
+                from {
+                    opacity: 1;
+                    transform: translateY(0)
+                }
+
+                to {
+                    opacity: 0;
+                    transform: translateY(6px)
+                }
+            }
+        </style>
+        {% block head %}{% endblock %}
+    </head>
+
+    <body>
+
+        {% if session.username %}
+            <nav>
+                <a class="nav-logo" href="/dashboard">Actu<span>ON</span></a>
+                <a class="nav-link {% if request.path == '/dashboard' %}active{% endif %}" href="/dashboard">Dashboard</a>
+                <a class="nav-link {% if request.path == '/tasks' %}active{% endif %}" href="/tasks">Tasks</a>
+                <a class="nav-link {% if request.path == '/focus' %}active{% endif %}" href="/focus">Focus</a>
+                <a class="nav-link {% if request.path == '/dump' %}active{% endif %}" href="/dump">Brain Dump</a>
+                <a class="nav-link {% if request.path == '/history' %}active{% endif %}" href="/history">History</a>
+                <div class="nav-right">
+                    <div class="nav-user">
+                        <div class="nav-dot"></div>{{ session.username }}
+                    </div>
+                    <a class="btn-logout" href="/logout">logout</a>
+                </div>
+            </nav>
+        {% endif %}
+
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- TOAST CONTAINER -->
+        <div id="toast-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="toast toast-{{ category }}" onclick="this.remove()">{{ message }}</div>
+                {% endfor %}
+            {% endwith %}
+        </div>
+
+        {% block scripts %}{% endblock %}
+
+        <!-- GLOBAL PERSISTENT FLOW TIMER -->
+        <script>
+            // ── TOAST AUTO-REMOVE ──
+            document.querySelectorAll('.toast').forEach(t => {
+                setTimeout(() => t.remove(), 3000);
+            });
+
+            // ── KEYBOARD SHORTCUT: N = open add task form (on /tasks page) ──
+            document.addEventListener('keydown', e => {
+                // Don't fire if typing in an input/textarea
+                if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+                if (e.key === 'n' || e.key === 'N') {
+                    // If we're on the tasks page, toggle the form
+                    const addForm = document.getElementById('addForm');
+                    if (addForm) {
+                        e.preventDefault();
+                        const isOpen = addForm.classList.contains('open');
+                        if (!isOpen) {
+                            addForm.classList.add('open');
+                            const inp = document.getElementById('taskInput');
+                            if (inp) inp.focus();
+                            const btn = document.getElementById('addToggleBtn');
+                            if (btn) btn.textContent = '✕ Cancel';
+                        }
+                    } else {
+                        // On other pages, navigate to tasks with form open
+                        window.location.href = '/tasks?new=1';
+                    }
+                }
+            });
+            // Flow timer persists across all pages using localStorage.
+            // Keys: actuon_flow_running (bool), actuon_flow_start (timestamp), actuon_flow_elapsed (seconds)
+
+            const FLOW_RUNNING_KEY = 'actuon_flow_running';
+            const FLOW_START_KEY = 'actuon_flow_start';
+            const FLOW_ELAPSED_KEY = 'actuon_flow_elapsed';
+
+            let _globalInterval = null;
+
+            function flowGetElapsed() {
+                const base = parseInt(localStorage.getItem(FLOW_ELAPSED_KEY) || '0');
+                const running = localStorage.getItem(FLOW_RUNNING_KEY) === 'true';
+                if (!running) return base;
+                const start = parseInt(localStorage.getItem(FLOW_START_KEY) || Date.now());
+                return base + Math.floor((Date.now() - start) / 1000);
+            }
+
+            function flowFmt(sec) {
+                return String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(sec % 60).padStart(2, '0');
+            }
+
+            function flowIsRunning() {
+                return localStorage.getItem(FLOW_RUNNING_KEY) === 'true';
+            }
+
+            function flowStart() {
+                if (flowIsRunning()) return;
+                // Freeze current elapsed into base, record new start
+                localStorage.setItem(FLOW_ELAPSED_KEY, flowGetElapsed());
+                localStorage.setItem(FLOW_START_KEY, Date.now());
+                localStorage.setItem(FLOW_RUNNING_KEY, 'true');
+                _startGlobalTick();
+            }
+
+            function flowPause() {
+                if (!flowIsRunning()) return;
+                // Save total elapsed, stop
+                localStorage.setItem(FLOW_ELAPSED_KEY, flowGetElapsed());
+                localStorage.setItem(FLOW_RUNNING_KEY, 'false');
+                clearInterval(_globalInterval);
+                _globalInterval = null;
+            }
+
+            function flowReset() {
+                flowPause();
+                localStorage.setItem(FLOW_ELAPSED_KEY, '0');
+                _tickAll();
+            }
+
+            function flowToggle() {
+                if (flowIsRunning()) flowPause();
+                else flowStart();
+            }
+
+            function _startGlobalTick() {
+                if (_globalInterval) return;
+                _globalInterval = setInterval(_tickAll, 1000);
+            }
+
+            function _tickAll() {
+                const sec = flowGetElapsed();
+                const fmt = flowFmt(sec);
+                const min = Math.floor(sec / 60);
+
+                // Update any timer display elements on the current page
+                document.querySelectorAll('[data-flow-timer]').forEach(el => el.textContent = fmt);
+                document.querySelectorAll('[data-flow-minutes]').forEach(el => el.textContent = min + 'm');
+                document.querySelectorAll('[data-flow-label]').forEach(el => {
+                    el.textContent = flowIsRunning() ? 'FLOWING' : 'PAUSED';
+                    el.style.color = flowIsRunning() ? 'var(--pl)' : '';
+                });
+                document.querySelectorAll('[data-flow-btn]').forEach(btn => {
+                    if (flowIsRunning()) {
+                        btn.textContent = btn.dataset.pauseText || '⏸ PAUSE';
+                        btn.classList.add('running');
+                    } else {
+                        btn.textContent = btn.dataset.startText || '▶ START FLOW';
+                        btn.classList.remove('running');
+                    }
+                });
+            }
+
+            // On every page load: if timer was running, resume ticking
+            document.addEventListener('DOMContentLoaded', () => {
+                _tickAll(); // sync UI immediately
+                if (flowIsRunning()) {
+                    _startGlobalTick();
+                }
+            });
+        </script>
+    </body>
+
+</html>
