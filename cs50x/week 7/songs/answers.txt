@@ -1,0 +1,5 @@
+Q1) Audio Aura:
+So I looked at the three averages and got energy 0.659, valence 0.484 and danceability 0.716. From this numbers I think the listener likes music that is energetic and easy to dance to, but the valence is below 0.5 which means the songs are more on the sad and moody side. So basically they like danceable but emotional music, not happy party songs. Kind of the typical 2018 Spotify listener honestly.
+
+Q2) — Why it might not be accurate:
+I think there is few problems with this method. Averages dont really show the full picture, like if someone listens to one very happy song and one very sad song the average just comes out as neutral which doesnt make sense. Also this database is the global top 100 songs, not actually one persons listening history so it cant really represent a single listener accurately. A better way would be to look at how many times each song was played by that specific person and give more weight to the songs they repeated a lot, that would be more honest representation of their taste.

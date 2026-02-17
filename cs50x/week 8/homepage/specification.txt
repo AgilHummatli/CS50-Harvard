@@ -1,0 +1,29 @@
+HTML Tags Used (10):
+1. <nav> - navigation bar across all pages
+2. <ul> - unordered list for navbar links and timeline
+3. <li> - list items inside navbar and timeline
+4. <a> - hyperlinks for navigation between pages
+5. <section> - hero section on index.html
+6. <div> - container and card layout elements
+7. <h1> - main page headings
+8. <p> - paragraph text for descriptions
+9. <button> - submit button on contact page
+10. <textarea> - multi-line message input on contact page
+11. <form> - contact form on contact.html
+12. <input> - text and email input fields on contact page
+13. <footer> - page footer on all pages
+14. <hr> - horizontal rule divider on about and skills pages
+15. <label> - form labels on contact page
+
+CSS Properties Used (5):
+1. background-color - used to set colors for navbar, hero, cards, footer
+2. font-size - used to set sizes for headings and text
+3. box-shadow - used on info cards for depth effect
+4. transition - used for smooth hover animations on cards, buttons, links
+5. border-radius - used to round corners on buttons, cards, progress bars
+
+JavaScript Usage:
+On index.html, JavaScript fades in the hero title smoothly on page load using opacity transition. On skills.html, JavaScript animates the progress bars from 0% to their target widths when the page loads. On contact.html, JavaScript validates that all fields are filled before showing a success message and hiding the form.
+
+Bootstrap Usage:
+Bootstrap is used for the responsive navbar with mobile hamburger menu, the grid system (col-md-4, col-md-6) to lay out cards and form columns, progress bar components on skills.html, list-group component for certificates, form-control classes for styled input fields, and alert component for the success message on contact.html.
